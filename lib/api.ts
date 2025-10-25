@@ -1,28 +1,49 @@
+import { Note } from "@/types/note";
 import axios from "axios";
 
-export type Note = {
-  id: string;
-  title: string;
-  content: string;
-  categoryId: string;
-  userId: string;
-  createdAt: string;
-  updatedAt: string;
-};
+const API_KEY = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 
-export type NoteListResponse = {
+const noteHubApi = axios.create({
+  baseURL: "https://notehub-public.goit.study/api/notes",
+  headers: {
+    Accept: "application/json",
+    Authorization: `Bearer ${API_KEY}`,
+  },
+});
+
+interface NoteResponse {
   notes: Note[];
-  total: number;
+  totalPages: number;
+  totalNotes: number;
+}
+
+export const fetchNotes = async (
+  search: string,
+  page: number = 1,
+  perPage: number = 10
+): Promise<NoteResponse> => {
+  const params = { search, page, perPage };
+
+  const { data } = await noteHubApi.get<NoteResponse>("", { params });
+
+  return data;
 };
 
-axios.defaults.baseURL = "https://next-docs-9f0504b0a741.herokuapp.com";
-
-export const getNotes = async () => {
-  const res = await axios.get<NoteListResponse>("/notes");
-  return res.data;
+export const fetchNoteById = async (id: string): Promise<Note> => {
+  const { data } = await noteHubApi.get<Note>(`/${id}`);
+  return data;
 };
 
-export const getSingleNote = async (id: string) => {
-  const res = await axios.get<Note>(`/notes/${id}`);
-  return res.data;
+export const createNote = async (
+  newNote: Pick<Note, "title" | "content" | "tag">
+) => {
+  const { data } = await noteHubApi.post<Note>("", newNote);
+
+  return data;
+};
+
+export const deleteNote = async (id: string) => {
+  const { data } = await noteHubApi.delete<Note>(`/${id}`);
+
+  return data;
 };
