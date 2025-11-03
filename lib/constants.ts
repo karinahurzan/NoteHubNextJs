@@ -6,5 +6,5 @@ export const NOTES_FILTER_CATEGORIES = [
   "Meeting",
   "Shopping",
 ];
-export const URL = `https://08-zustand-teal-nu.vercel.app/`;
+export const URL = `https://note-hub-next-js.vercel.app/`;
 export const GRAPH_URL = `https://ac.goit.global/fullstack/react/notehub-og-meta.jpg`;
