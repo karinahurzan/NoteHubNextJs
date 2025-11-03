@@ -70,7 +70,10 @@ const NoteForm = () => {
     }
   };
 
-  const handleCancel = () => router.push("/notes/filter/All");
+  const handleCancel = () => {
+    router.push("/notes/filter/All");
+    clearDraft();
+  };
 
   return (
     <form className={css.form} action={handleCreateNote}>
