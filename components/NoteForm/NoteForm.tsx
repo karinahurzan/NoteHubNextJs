@@ -1,24 +1,24 @@
-"use client";
+'use client';
 
-import { useId, useState } from "react";
-import css from "./NoteForm.module.css";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createNote } from "@/lib/api";
-import { Note } from "@/types/note";
-import { NOTES_FILTER_CATEGORIES } from "@/lib/constants";
-import { useRouter } from "next/navigation";
-import { useNoteDraftStore } from "@/lib/store/noteStore";
-import * as Yup from "yup";
+import { useId, useState } from 'react';
+import css from './NoteForm.module.css';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createNote } from '@/lib/api/clientApi';
+import { Note } from '@/types/note';
+import { NOTES_FILTER_CATEGORIES } from '@/lib/constants';
+import { useRouter } from 'next/navigation';
+import { useNoteDraftStore } from '@/lib/store/noteStore';
+import * as Yup from 'yup';
 
 const noteFormSchema = Yup.object().shape({
   title: Yup.string()
-    .min(3, "Title too short")
-    .max(50, "Title too long")
-    .required("Title is required"),
-  content: Yup.string().max(500, "Content too long"),
+    .min(3, 'Title too short')
+    .max(50, 'Title too long')
+    .required('Title is required'),
+  content: Yup.string().max(500, 'Content too long'),
   tag: Yup.string()
-    .oneOf(["Todo", "Work", "Personal", "Meeting", "Shopping"], "Invalid tag")
-    .required("Tag is required"),
+    .oneOf(['Todo', 'Work', 'Personal', 'Meeting', 'Shopping'], 'Invalid tag')
+    .required('Tag is required'),
 });
 
 const NoteForm = () => {
@@ -30,9 +30,7 @@ const NoteForm = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleChange = (
-    event: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     setDraft({
       ...draft,
@@ -43,17 +41,14 @@ const NoteForm = () => {
   const { mutate: createMutate, isPending: isCreatePending } = useMutation({
     mutationFn: createNote,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["notes"] });
-      router.push("/notes/filter/All");
+      queryClient.invalidateQueries({ queryKey: ['notes'] });
+      router.push('/notes/filter/All');
       clearDraft();
     },
   });
 
   const handleCreateNote = async (formData: FormData) => {
-    const values = Object.fromEntries(formData) as Pick<
-      Note,
-      "title" | "content" | "tag"
-    >;
+    const values = Object.fromEntries(formData) as Pick<Note, 'title' | 'content' | 'tag'>;
 
     try {
       await noteFormSchema.validate(values, { abortEarly: false });
@@ -70,10 +65,7 @@ const NoteForm = () => {
     }
   };
 
-  const handleCancel = () => {
-    router.push("/notes/filter/All");
-    clearDraft();
-  };
+  const handleCancel = () => router.push('/notes/filter/All');
 
   return (
     <form className={css.form} action={handleCreateNote}>
@@ -122,19 +114,11 @@ const NoteForm = () => {
       </div>
 
       <div className={css.actions}>
-        <button
-          type="button"
-          className={css.cancelButton}
-          onClick={handleCancel}
-        >
+        <button type="button" className={css.cancelButton} onClick={handleCancel}>
           Cancel
         </button>
-        <button
-          type="submit"
-          className={css.submitButton}
-          disabled={isCreatePending}
-        >
-          {isCreatePending ? "Creating..." : "Create note"}
+        <button type="submit" className={css.submitButton} disabled={isCreatePending}>
+          {isCreatePending ? 'Creating...' : 'Create note'}
         </button>
       </div>
     </form>

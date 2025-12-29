@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useParams } from "next/navigation";
-import css from "./NotePreview.module.css";
-import { fetchNoteById } from "@/lib/api";
-import { useQuery } from "@tanstack/react-query";
-import Modal from "@/components/Modal/Modal";
-import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useParams } from 'next/navigation';
+import css from './NotePreview.module.css';
+import { useQuery } from '@tanstack/react-query';
+import Modal from '@/components/Modal/Modal';
+import { useRouter } from 'next/navigation';
+import { useCallback } from 'react';
+import { fetchNoteById } from '@/lib/api/clientApi';
 
 const NotePreview = () => {
   const { id } = useParams<{ id: string }>();
@@ -21,20 +21,20 @@ const NotePreview = () => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["note", id],
+    queryKey: ['note', id],
     queryFn: () => fetchNoteById(id),
     refetchOnMount: false,
   });
 
   const formattedDate = note
-    ? new Date(note.createdAt).toLocaleString("uk-UA", {
-        year: "numeric",
-        month: "numeric",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
+    ? new Date(note.createdAt).toLocaleString('uk-UA', {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
       })
-    : "—";
+    : '—';
 
   if (isLoading) return <p>Loading, please wait...</p>;
 
